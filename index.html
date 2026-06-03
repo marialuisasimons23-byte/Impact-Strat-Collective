@@ -946,7 +946,7 @@ footer{background:rgba(2,6,20,.90)!important}
 
   <div class="mp-vol-area">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="opacity:.5;flex:none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-    <input type="range" id="mp-vol" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">
+    <input type="range" id="mp-vol" min="0" max="1" step="0.01" value="0.4" aria-label="Volume">
   </div>
 </div>
 
@@ -1797,6 +1797,35 @@ document.querySelectorAll('.module .mod-video').forEach(vid => {
   /* Fallback: if video never fires canplay (e.g. file missing), skip gracefully */
   vid.addEventListener('error', () => mod.classList.remove('vid-ready'));
 });
+
+
+/* ── Autoplay on first user interaction (bypasses browser block) ── */
+(function(){
+  let started = false;
+  function startMusic(){
+    if(started) return;
+    started = true;
+    /* Remove listeners immediately so it only fires once */
+    ['click','scroll','touchstart','keydown'].forEach(e =>
+      document.removeEventListener(e, startMusic)
+    );
+    const audioEl = document.getElementById('mp-audio');
+    if(!audioEl || isPlaying) return;
+    /* Small delay so page feels settled */
+    setTimeout(() => {
+      audioEl.volume = 0.4;
+      audioEl.play().then(() => {
+        isPlaying = true;
+        document.getElementById('mp-icon-play').style.display  = 'none';
+        document.getElementById('mp-icon-pause').style.display = '';
+        document.getElementById('mp-play').setAttribute('aria-label','Pause');
+      }).catch(() => {});
+    }, 800);
+  }
+  ['click','scroll','touchstart','keydown'].forEach(e =>
+    document.addEventListener(e, startMusic, {passive:true})
+  );
+})();
 
 </script>
 </body>
