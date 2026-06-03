@@ -1793,7 +1793,7 @@ loadTrack(0);
   function autoStart(){
     if(autoStarted||isPlaying)return;
     autoStarted=true;
-    ['click','scroll','touchstart','keydown'].forEach(ev=>
+    ['click','touchstart','keydown','pointerdown'].forEach(ev=>
       document.removeEventListener(ev,autoStart)
     );
     audioEl.volume=0.4;
@@ -1801,7 +1801,7 @@ loadTrack(0);
       .then(()=>setPlayingUI(true))
       .catch(e=>{ console.warn('Autoplay blocked:',e); setPlayingUI(false); });
   }
-  ['click','scroll','touchstart','keydown'].forEach(ev=>
+  ['click','touchstart','keydown','pointerdown'].forEach(ev=>
     document.addEventListener(ev,autoStart,{passive:true})
   );
 
