@@ -908,7 +908,7 @@ footer{background:rgba(2,6,20,.90)!important}
 </style>
 </head>
 <body>
-<audio id="mp-audio" preload="none"></audio>
+<audio id="mp-audio" preload="auto"></audio>
 <canvas id="vis-canvas" aria-hidden="true"></canvas>
 
 <!-- ═══════════════ MUSIC PLAYER ═══════════════ -->
@@ -1566,19 +1566,21 @@ function loadTrack(idx){
 }
 
 /* ── Play/Pause ── */
+function setPlayingUI(playing){
+  isPlaying=playing;
+  document.getElementById('mp-icon-play').style.display  = playing?'none':'';
+  document.getElementById('mp-icon-pause').style.display = playing?'':'none';
+  document.getElementById('mp-play').setAttribute('aria-label',playing?'Pause':'Play');
+}
 function togglePlay(){
-  initAudio();
-  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
   if(isPlaying){
-    audioEl.pause();isPlaying=false;
-    document.getElementById('mp-icon-play').style.display='';
-    document.getElementById('mp-icon-pause').style.display='none';
-    document.getElementById('mp-play').setAttribute('aria-label','Play');
+    audioEl.pause();
+    setPlayingUI(false);
   }else{
-    audioEl.play().catch(()=>{});isPlaying=true;
-    document.getElementById('mp-icon-play').style.display='none';
-    document.getElementById('mp-icon-pause').style.display='';
-    document.getElementById('mp-play').setAttribute('aria-label','Pause');
+    audioEl.volume=audioEl.volume||0.4;
+    audioEl.play()
+      .then(()=>setPlayingUI(true))
+      .catch(e=>{ console.warn('Audio play blocked:',e); setPlayingUI(false); });
   }
 }
 
@@ -1785,6 +1787,23 @@ draw();
 
 /* ── Load first track ── */
 loadTrack(0);
+
+  /* ── Autoplay on first interaction (browser policy workaround) ── */
+  let autoStarted=false;
+  function autoStart(){
+    if(autoStarted||isPlaying)return;
+    autoStarted=true;
+    ['click','scroll','touchstart','keydown'].forEach(ev=>
+      document.removeEventListener(ev,autoStart)
+    );
+    audioEl.volume=0.4;
+    audioEl.play()
+      .then(()=>setPlayingUI(true))
+      .catch(e=>{ console.warn('Autoplay blocked:',e); setPlayingUI(false); });
+  }
+  ['click','scroll','touchstart','keydown'].forEach(ev=>
+    document.addEventListener(ev,autoStart,{passive:true})
+  );
 
 })(); /* end IIFE */
 
