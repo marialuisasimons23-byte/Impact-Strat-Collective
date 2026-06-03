@@ -799,6 +799,103 @@ footer{background:rgba(2,6,20,.90)!important}
   #inev-word{opacity:1!important;animation:none!important}
 }
 
+
+/* ══════════════════════════════════
+   MODULE VIDEO BACKDROPS
+══════════════════════════════════ */
+.module{position:relative;overflow:hidden}
+
+.mod-video{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1s ease;
+  z-index:0;
+  pointer-events:none;
+  filter:blur(1.5px) brightness(.85);
+}
+.mod-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(120deg,rgba(2,6,20,.88) 0%,rgba(4,13,40,.80) 100%);
+  opacity:0;
+  transition:opacity 1s ease;
+  z-index:1;
+  pointer-events:none;
+}
+
+/* Always-on: video fades in when page loads */
+.module.vid-ready .mod-video{opacity:1}
+.module.vid-ready .mod-overlay{opacity:1}
+
+/* All direct content children sit above video */
+.module > .mnum,
+.module > div,
+.module > .mright{position:relative;z-index:2}
+
+/* Text colour shift when video is active */
+.module.vid-ready .mnum{color:rgba(127,176,255,.4);text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.module.vid-ready:hover .mnum{color:var(--blue-aqua)}
+.module.vid-ready h3{
+  color:#fff;
+  text-shadow:0 2px 20px rgba(0,0,0,.9),0 0 40px rgba(0,0,0,.6);
+}
+.module.vid-ready .msub{
+  color:rgba(220,235,255,.95);
+  text-shadow:0 1px 8px rgba(0,0,0,.8);
+}
+.module.vid-ready .mbody{
+  color:rgba(195,215,240,.92);
+  text-shadow:0 1px 6px rgba(0,0,0,.7);
+}
+.module.vid-ready .mtag{
+  color:var(--blue-aqua);
+  text-shadow:0 0 12px rgba(0,200,255,.4);
+}
+/* Frosted glass backdrop behind text block */
+.module.vid-ready > div:nth-child(3){
+  background:rgba(2,8,24,.35);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  border-radius:12px;
+  padding:20px 24px;
+  border:1px solid rgba(127,176,255,.12);
+}
+.module.vid-ready .btn.ghost .face{border-color:rgba(127,176,255,.6);color:#fff}
+.module.vid-ready .btn.ghost:hover .face{background:rgba(127,176,255,.18);color:#fff;border-color:var(--blue-aqua)}
+
+/* Border separator stays subtle */
+.module.vid-ready{border-top-color:rgba(127,176,255,.2)}
+.module.vid-ready:last-child{border-bottom-color:rgba(127,176,255,.2)}
+
+
+/* ── Stronger treatment for brighter videos (01 + 03) ── */
+#mod-01 .mod-overlay,
+#mod-03 .mod-overlay{
+  background:linear-gradient(120deg,rgba(2,4,16,.94) 0%,rgba(3,10,32,.90) 100%);
+}
+#mod-01 .mod-video,
+#mod-03 .mod-video{
+  filter:blur(2px) brightness(.6);
+}
+/* Heavier frosted glass on those two */
+#mod-01.vid-ready > div:nth-child(3),
+#mod-03.vid-ready > div:nth-child(3){
+  background:rgba(2,6,20,.60);
+  border:1px solid rgba(127,176,255,.18);
+}
+/* Bolder text shadows */
+#mod-01.vid-ready h3,
+#mod-03.vid-ready h3{
+  text-shadow:0 2px 24px rgba(0,0,0,1),0 0 50px rgba(0,0,0,.9);
+}
+#mod-01.vid-ready .mbody,
+#mod-03.vid-ready .mbody,
+#mod-01.vid-ready .msub,
+#mod-03.vid-ready .msub{
+  text-shadow:0 1px 10px rgba(0,0,0,.95);
+}
+
 </style>
 </head>
 <body>
@@ -813,7 +910,7 @@ footer{background:rgba(2,6,20,.90)!important}
   </div>
 
   <div class="mp-info">
-    <span class="mp-title">Quiet Enjoyment</span>
+    <span class="mp-title">70s Groove</span>
     <span class="mp-artist">Jazz Friends · 1/3</span>
   </div>
 
@@ -1002,7 +1099,11 @@ footer{background:rgba(2,6,20,.90)!important}
       <p class="rv d1">Three operating modes. One outcome — your value, made undeniable, and your pipeline, made unstoppable.</p>
     </div>
 
-    <div class="module rv" data-hover>
+    <div class="module rv" data-hover id="mod-01">
+      <video class="mod-video" autoplay muted loop playsinline preload="auto">
+        <source src="Engineered_Positioning.mp4" type="video/mp4">
+      </video>
+      <div class="mod-overlay"></div>
       <div class="mnum">01</div>
       <div>
         <span class="mtag">Strategic</span>
@@ -1015,7 +1116,11 @@ footer{background:rgba(2,6,20,.90)!important}
       </div>
     </div>
 
-    <div class="module rv" data-hover>
+    <div class="module rv" data-hover id="mod-02">
+      <video class="mod-video" autoplay muted loop playsinline preload="auto">
+        <source src="Accelerated_Execution.mp4" type="video/mp4">
+      </video>
+      <div class="mod-overlay"></div>
       <div class="mnum">02</div>
       <div>
         <span class="mtag">Relentless</span>
@@ -1028,7 +1133,11 @@ footer{background:rgba(2,6,20,.90)!important}
       </div>
     </div>
 
-    <div class="module rv" data-hover>
+    <div class="module rv" data-hover id="mod-03">
+      <video class="mod-video" autoplay muted loop playsinline preload="auto">
+        <source src="Critical_Value.mp4" type="video/mp4">
+      </video>
+      <div class="mod-overlay"></div>
       <div class="mnum">03</div>
       <div>
         <span class="mtag">Essential</span>
@@ -1372,8 +1481,8 @@ if(rspeed){
 
 /* ── Tracks ── */
 const TRACKS=[
-  {title:'Quiet Enjoyment',     artist:'Jazz Friends',url:'https://ia800107.us.archive.org/16/items/jamendo-118676/09-1008114-Jazz%20Friends-Quiet%20Enjoyment%20by%20Charly%20Greuel%20_Jazz%20Friends%20version%20remastered_.mp3'},
   {title:'70s Groove',          artist:'Jazz Friends',url:'https://ia800107.us.archive.org/16/items/jamendo-118676/01-1008085-Jazz%20Friends-Return%20to%20the%2070_s%20groove%20by%20Philippe%20Mangold.mp3'},
+  {title:'Quiet Enjoyment',     artist:'Jazz Friends',url:'https://ia800107.us.archive.org/16/items/jamendo-118676/09-1008114-Jazz%20Friends-Quiet%20Enjoyment%20by%20Charly%20Greuel%20_Jazz%20Friends%20version%20remastered_.mp3'},
   {title:'Jazz & Lounge',       artist:'MokkaMusic', url:'https://ia803104.us.archive.org/17/items/jamendo-498284/01-1977050-MokkaMusic-Jazz%20and%20Lounge.mp3'},
 ]; /* CC-licensed via Jamendo / Internet Archive — CORS ✓ */
 let currentIdx=0, isPlaying=false;
@@ -1669,6 +1778,16 @@ draw();
 loadTrack(0);
 
 })(); /* end IIFE */
+
+
+/* ── Module video backdrops ── */
+document.querySelectorAll('.module .mod-video').forEach(vid => {
+  const mod = vid.closest('.module');
+  /* Mark ready as soon as enough data is loaded */
+  vid.addEventListener('canplay', () => mod.classList.add('vid-ready'), {once:true});
+  /* Fallback: if video never fires canplay (e.g. file missing), skip gracefully */
+  vid.addEventListener('error', () => mod.classList.remove('vid-ready'));
+});
 
 </script>
 </body>
